@@ -5,4 +5,12 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="color_fragment_header">#FF4D53</color>
+
+    <color name="color_fragment_first">#2E43C0</color>
+    <color name="color_fragment_second">#41349e</color>
+
+    <color name="color_fragment_third">#00bbc7</color>
+    <color name="color_fragment_fouth">#41349e</color>
+    <color name="color_fragment_fifth">#41349e</color>
+
 </resources>

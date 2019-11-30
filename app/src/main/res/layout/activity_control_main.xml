@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/act_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -8,10 +9,11 @@
         android:id="@+id/ViewPagerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="40dp"
+        android:paddingTop="60dp"
         android:background="#FFF"
         android:layout_weight="1">
     </android.support.v4.view.ViewPager>
-    <include layout="@layout/layout_fragment_header"></include>
+    <include
+        layout="@layout/layout_fragment_header"></include>
 
 </FrameLayout>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_header"
     android:layout_width="match_parent"
     android:layout_height="60dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="53dp"
+        android:background="@color/color_fragment_header">
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -26,12 +27,14 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="2dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/icon_user"/>
             <ImageButton
                 android:id="@+id/btn_my22"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="2dp"
+                android:layout_gravity="center_vertical"
                 android:background="@drawable/icon_user"/>
         </LinearLayout>
 
@@ -42,6 +45,7 @@
             android:layout_height="50dp"
             android:orientation="vertical"
             android:gravity="center"
+            android:layout_marginTop="3dp"
             android:background="@drawable/shape_corner_up"
             android:layout_weight="1">
             <TextView
@@ -58,6 +62,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center"
+            android:layout_marginTop="3dp"
             android:background="@drawable/shape_corner_up"
             android:layout_weight="1">
             <TextView
@@ -75,10 +80,11 @@
             android:layout_height="60dp"
             android:orientation="horizontal"
             android:gravity="center"
+            android:layout_marginTop="3dp"
             android:layout_weight="1.5">
             <ToggleButton
                 android:layout_marginTop="5dp"
-                android:id="@+id/btn_my44"
+                android:id="@+id/btn_header_hide"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:textOff=""
@@ -92,6 +98,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center"
+            android:layout_marginTop="3dp"
             android:background="@drawable/shape_corner_up"
             android:layout_weight="1">
             <TextView
@@ -110,6 +117,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@drawable/shape_corner_up"
+            android:layout_marginTop="3dp"
             android:layout_weight="1">
             <TextView
                 android:id="@+id/fourthTextView"
@@ -125,6 +133,7 @@
             android:layout_height="50dp"
             android:orientation="horizontal"
             android:gravity="center"
+            android:layout_marginTop="3dp"
             android:background="@drawable/shape_corner_up"
             android:layout_weight="1">
             <TextView

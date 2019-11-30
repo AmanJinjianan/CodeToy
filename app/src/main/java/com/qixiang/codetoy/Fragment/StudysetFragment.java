@@ -50,15 +50,17 @@ public class StudysetFragment extends Fragment {
         horizontalScrollView = (HorizontalScrollView) context1.findViewById(R.id.horizontalScrollViewstudy);
         container = (LinearLayout) context1.findViewById(R.id.horizinercstudy);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((ControlMainAct.width-120)/3,ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER;
-        layoutParams.setMargins(20, 10, 20, 10);
+        if(container.getChildCount() == 0){
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((ControlMainAct.width-120)/3,ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.setMargins(20, 10, 20, 10);
 
-        for (int i = 0; i < 3; i++) {
-            Item_Studyset ip = new Item_Studyset(context1);
-            ip.setLayoutParams(layoutParams);
-            container.addView(ip);
-            container.invalidate();
+            for (int i = 0; i < 3; i++) {
+                Item_Studyset ip = new Item_Studyset(context1);
+                ip.setLayoutParams(layoutParams);
+                container.addView(ip);
+                container.invalidate();
+            }
         }
         super.onResume();
     }

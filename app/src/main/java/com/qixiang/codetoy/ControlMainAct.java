@@ -1,6 +1,7 @@
 package com.qixiang.codetoy;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -30,9 +31,12 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.qixiang.codetoy.BLE.BLEService;
 import com.qixiang.codetoy.BLE.MyListener;
@@ -79,6 +83,11 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     //保存下位机设备ID
     public byte theOneByte=0;
 
+    private ToggleButton tgButton_hide;
+    //代表在第几个“发收周期”，初始为"1"（一发一收代表一个周期）
+    int recycleCount=1;
+    String theReamainDataString = "";
+
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
         @Override
@@ -107,9 +116,7 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                     }
                 }
             }
-            if(null == device.getName())
-            {
-            }else{
+            if(null != device.getName()){
                 Message m = new Message();
                 Bundle b = new Bundle();
                 m.what = 1234321;
@@ -143,9 +150,6 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         }
     };
 
-    //代表在第几个“发收周期”，初始为"1"（一发一收代表一个周期）
-    int recycleCount=1;
-    String theReamainDataString = "";
     @SuppressLint("HandlerLeak")
     private Handler myHandler = new Handler(){
         public void handleMessage(android.os.Message msg) {
@@ -277,7 +281,7 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         mFragmentManager = getSupportFragmentManager();
 
         PlaysetFragment pf = new PlaysetFragment();
-            pf.setTheHandler(myHandler);
+        pf.setTheHandler(myHandler);
         Fragment cf = new ControlsetFragment();
         Fragment sf = new StudysetFragment();
         Fragment csf = new CodesetFragment();
@@ -625,10 +629,22 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
             }
         }
     }
+    FrameLayout act_main;
     private void initView() {
         findViewById(R.id.btn_my).setOnClickListener(this);
         titleTextView = (TextView) findViewById(R.id.ViewTitle);
         mViewpager = (ViewPager) findViewById(R.id.ViewPagerLayout);
+
+        tgButton_hide  = (ToggleButton) findViewById(R.id.btn_header_hide);
+
+        tgButton_hide.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Tools.setLog("log1","ischeck:"+isChecked);
+                onToggleButton(tgButton_hide,isChecked,tgButton_hide.getHeight());
+            }
+        });
+        act_main = (FrameLayout)findViewById(R.id.act_main);
         firstLinearLayout = (LinearLayout)findViewById(R.id.firstLinearLayout);
         firstLinearLayout.setOnClickListener(this);
         secondLinearlayout = (LinearLayout)findViewById(R.id.secondLinearLayout);
@@ -649,10 +665,23 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         mViewpager.addOnPageChangeListener(new ViewPagerOnPagerChangedLisenter());
         mViewpager.setAdapter(mViewPagerFragmentAdapter);
         mViewpager.setCurrentItem(0);
-        firstLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_header));
+        firstLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_first));
+        mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_first));
         updateBottomLinearLayoutSelect(true,false,false,false);
     }
-
+    //记录顶部header基准的Y坐标
+    private float locationY_base;
+    private void onToggleButton(View v,boolean isCheck,int viewHeigh){
+        float translationX = findViewById(R.id.layout_header).getTranslationY();
+        ObjectAnimator anim;
+        if(isCheck){
+            anim = ObjectAnimator.ofFloat(findViewById(R.id.layout_header), "translationY", translationX, -100f);
+        }else {
+            anim = ObjectAnimator.ofFloat(findViewById(R.id.layout_header), "translationY", translationX, 0f);
+        }
+        anim.setDuration(1000);
+        anim.start();
+    }
     private void updateBottomLinearLayoutSelect(boolean f, boolean s, boolean t,boolean q) {
         firstLinearLayout.setSelected(f);
         secondLinearlayout.setSelected(s);
@@ -681,10 +710,6 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
             case  R.id.btn_my:
                 Toast.makeText(ControlMainAct.this,"未开发",Toast.LENGTH_SHORT).show();
                 break;
-            default:
-
-
-                break;
         }
     }
 
@@ -702,11 +727,26 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         fourLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_header));
         fiveLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_header));
         switch (position){
-            case 0:firstLinearLayoutGD.setColor(Color.parseColor("#2E43C0"));break;
-            case 1:secondLinearlayoutGD.setColor(Color.parseColor("#41349e"));break;
-            case 2:threeLinearLayoutGD.setColor(Color.parseColor("#00bbc7"));break;
-            case 3:fourLinearLayoutGD.setColor(Color.parseColor("#12b961"));break;
-            case 4:fiveLinearLayoutGD.setColor(Color.parseColor("#49BAC8"));break;
+            case 0:
+                firstLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_first));
+                mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_first));
+                break;
+            case 1:
+                secondLinearlayoutGD.setColor(getResources().getColor(R.color.color_fragment_second));
+                mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_second));
+                break;
+            case 2:
+                threeLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_third));
+                mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_third));
+                break;
+            case 3:
+                fourLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_fouth));
+                mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_fouth));
+                break;
+            case 4:
+                fiveLinearLayoutGD.setColor(getResources().getColor(R.color.color_fragment_fifth));
+                mViewpager.setBackgroundColor(getResources().getColor(R.color.color_fragment_fifth));
+                break;
         }
     }
     class ViewPagerOnPagerChangedLisenter implements ViewPager.OnPageChangeListener{

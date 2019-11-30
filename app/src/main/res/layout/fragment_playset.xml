@@ -8,7 +8,7 @@
         android:id="@+id/horizontalScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#2E43C0">
+        android:background="@color/color_fragment_first">
 
         <LinearLayout
             android:id="@+id/horiziner334"

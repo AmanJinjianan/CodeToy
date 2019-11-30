@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:fadingEdge="none"
-        android:background="#00bbc7">
+        android:background="@color/color_fragment_third">
 
         <LinearLayout
             android:id="@+id/horizinercstudy"

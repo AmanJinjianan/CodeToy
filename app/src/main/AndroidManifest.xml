@@ -33,7 +33,6 @@
         <activity android:name=".StudentDetailInfoActivity">
             <intent-filter>
                 <action android:name="com.qixiang.bleskip.detailinfo" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -68,16 +67,16 @@
             android:name=".ControlMainAct"
             android:screenOrientation="landscape"
             android:theme="@style/theme_fullScreen">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".DrawActivity"
             android:screenOrientation="landscape"
             android:theme="@style/theme_fullScreen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".PKActivity"

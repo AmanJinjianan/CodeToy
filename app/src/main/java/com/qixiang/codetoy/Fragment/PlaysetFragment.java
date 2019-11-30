@@ -47,6 +47,11 @@ public class PlaysetFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onAttach(Activity context) {
         context1 = context;
         super.onAttach(context);
@@ -63,16 +68,19 @@ public class PlaysetFragment extends Fragment {
         horizontalScrollView = (HorizontalScrollView) context1.findViewById(R.id.horizontalScrollView);
         container = (LinearLayout) context1.findViewById(R.id.horiziner334);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((ControlMainAct.width-240)/3,ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER;
-        layoutParams.setMargins(40, 10, 40, 10);
+        if(container.getChildCount() == 0){
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((ControlMainAct.width-240)/3,ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.gravity = Gravity.CENTER;
+            layoutParams.setMargins(40, 10, 40, 10);
 
-        for (int i = 0; i < 6; i++) {
-            Item_Playset ip = new Item_Playset(context1,i,(ControlMainAct.width-240)/3,theHandler);
-            ip.setLayoutParams(layoutParams);
-            container.addView(ip);
-            container.invalidate();
+            for (int i = 0; i < 4; i++) {
+                Item_Playset ip = new Item_Playset(context1,i,(ControlMainAct.width-240)/3,theHandler);
+                ip.setLayoutParams(layoutParams);
+                container.addView(ip);
+                container.invalidate();
+            }
         }
+
         super.onResume();
     }
 }
