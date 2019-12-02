@@ -20,11 +20,13 @@ import com.qixiang.codetoy.MyView.MyRockerView;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.qixiang.codetoy.ControlMainAct.Action_control_data;
+
 public class ControllerProActivity extends Activity implements View.OnClickListener, MyRockerView.OnShakeListener {
 
     public boolean reveiveFlag = false;
 
-    private Intent intent = new Intent("CONTROLLERDATA");
+    private Intent intent = new Intent(Action_control_data);
 
     private MyTimerTask mt34;
     private Timer timer34;

@@ -301,9 +301,10 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         registerBro();
     }
 
+    public static final String  Action_control_data = "CONTROLLERDATA";
     private void registerBro(){
         IntentFilter itf = new IntentFilter();
-        itf.addAction("CONTROLLERDATA");
+        itf.addAction(Action_control_data);
         registerReceiver(brv,itf);
     }
     private BroadcastReceiver brv = new BroadcastReceiver() {

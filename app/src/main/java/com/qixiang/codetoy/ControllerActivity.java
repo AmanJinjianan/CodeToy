@@ -21,6 +21,8 @@ import com.qixiang.codetoy.Util.Utils;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.qixiang.codetoy.ControlMainAct.Action_control_data;
+
 public class ControllerActivity extends Activity implements View.OnClickListener{
 
     private MyTimerTask mt12,mt34;
@@ -29,7 +31,7 @@ public class ControllerActivity extends Activity implements View.OnClickListener
     byte[] commandTwoBytes = new byte[2];
     public SeekBar theSeek;
     public boolean reveiveFlag = false;
-    private Intent intent = new Intent("CONTROLLERDATA");
+    private Intent intent = new Intent(Action_control_data);
     String data = "";
     private SendBle mSendBle;
     @Override

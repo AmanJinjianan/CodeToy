@@ -16,8 +16,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -31,7 +33,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.qixiang.codetoy.BLE.Tools;
+import com.qixiang.codetoy.R;
 import com.qixiang.codetoy.Util.Utils;
+
+import static com.qixiang.codetoy.ControlMainAct.Action_control_data;
 
 @SuppressLint("DrawAllocation")
 public class DrawView extends View {
@@ -51,7 +57,7 @@ public class DrawView extends View {
     //指令参数
     byte[] commandTwoBytes = new byte[2];
     //指令控制数据广播
-    private Intent intent = new Intent("CONTROLLERDATA");
+    private Intent intent = new Intent(Action_control_data);
     public DrawView(Context context, AttributeSet set) {
         super(context, set);
         theContext = context;
@@ -98,14 +104,17 @@ public class DrawView extends View {
         ar.add(y);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                Tools.setLog("DrawView",".......down....");
                 keyDownEvent(x,y);
                 break;
             case MotionEvent.ACTION_MOVE:
+                Tools.setLog("DrawView",".......move....x:"+x+" Y:"+y);
                 keyMoveEvent(x,y);
                 break;
             case MotionEvent.ACTION_UP:
-                keyUpEvent();
                 autoFlag = true;
+                Tools.setLog("DrawView",".......up....x:"+x+" Y:"+y);
+                keyUpEvent();
                 directionCalculate();
                 handler.sendEmptyMessage(110);
                 break;
@@ -120,8 +129,16 @@ public class DrawView extends View {
             float x2 =  ar.get(ar.size()-4);
             float y1 =  ar.get(ar.size()-5);
             float x1 =  ar.get(ar.size()-6);
+
             float kValue = (y2-y1)/(x2-x1);
             Utils.LogE("斜率K:"+ kValue);
+            Bitmap  redArrow = BitmapFactory.decodeResource(this.getContext().getResources(), R.drawable.redarrow);
+            //drawRotateBitmap(cacheCanvas,paint,redArrow ,90,x2,y2);
+            if(x2-x1>0){
+                drawRotateBitmap(cacheCanvas,paint,redArrow ,(float) Math.toDegrees(Math.atan(kValue)),x2,y2);
+            }else {
+                drawRotateBitmap(cacheCanvas,paint,redArrow ,(float) Math.toDegrees(Math.atan(kValue)) + 180,x2,y2);
+            }
 
             if(kValue >= -0.414 && kValue < 0.414){
                 if(x2-x1>0){
@@ -183,6 +200,7 @@ public class DrawView extends View {
     //绘图结束
     private void keyUpEvent(){
         cacheCanvas.drawPath(path, paint); //绘制路径
+
         path.reset();
         invalidate();
     }
@@ -194,7 +212,7 @@ public class DrawView extends View {
         //设置定时器，开始自动清除轨迹
         if(timer == null)
             timer = new Timer();
-        timer.schedule(new MyTimerTask(),500,200);
+        timer.schedule(new MyTimerTask(),200,30);
     }
     public void clear() {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -336,4 +354,16 @@ public class DrawView extends View {
             handler.sendEmptyMessage(111);
         }
     }
+
+    private void drawRotateBitmap(Canvas canvas, Paint paint, Bitmap bitmap,
+                                  float rotation, float posX, float posY) {
+        Matrix matrix = new Matrix();
+        int offsetX = bitmap.getWidth() / 5;
+        int offsetY = bitmap.getHeight() / 2;
+        matrix.postTranslate(-offsetX, -offsetY);
+        matrix.postRotate(rotation);
+        matrix.postTranslate(posX, posY );
+        canvas.drawBitmap(bitmap, matrix, paint);
+    }
+
 }

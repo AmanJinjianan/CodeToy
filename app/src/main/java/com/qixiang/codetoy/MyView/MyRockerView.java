@@ -28,7 +28,7 @@ import com.qixiang.codetoy.R;
 public class MyRockerView extends View {
     private static final String TAG = "RockerView";
 
-    private static final int DEFAULT_SIZE = 400;
+    private static final int DEFAULT_SIZE = 680;
     private static final float DEFAULT_ROCKER_SCALE = 0.5f;//默认半径为背景的1/2
 
     private Paint mAreaBackgroundPaint;
@@ -162,7 +162,8 @@ public class MyRockerView extends View {
             mAreaBackgroundMode = AREA_BACKGROUND_MODE_DEFAULT;
         }
         // 摇杆背景
-        Drawable rockerBackground = typedArray.getDrawable(R.styleable.RockerView_rockerBackground);
+        //Drawable rockerBackground = typedArray.getDrawable(R.styleable.RockerView_rockerBackground);
+        Drawable rockerBackground = getResources().getDrawable(R.drawable.eight_control_center);
         if (null != rockerBackground) {
             // 设置了摇杆背景
             if (rockerBackground instanceof BitmapDrawable) {
@@ -195,6 +196,7 @@ public class MyRockerView extends View {
         typedArray.recycle();
     }
 
+    int count = 0;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int measureWidth, measureHeight;
@@ -204,18 +206,23 @@ public class MyRockerView extends View {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
+
         if (widthMode == MeasureSpec.EXACTLY) {
             // 具体的值和match_parent
             measureWidth = widthSize;
+            Tools.setLog("onMeasure","match_parent count:"+count++);
         } else {
             // wrap_content
             measureWidth = DEFAULT_SIZE;
+            Tools.setLog("onMeasure","wrap_content count:"+count++);
         }
+        measureWidth = DEFAULT_SIZE;
         if (heightMode == MeasureSpec.EXACTLY) {
             measureHeight = heightSize;
         } else {
             measureHeight = DEFAULT_SIZE;
         }
+        measureHeight = DEFAULT_SIZE;
         setMeasuredDimension(measureWidth, measureHeight);
     }
 
@@ -233,7 +240,9 @@ public class MyRockerView extends View {
         mCenterPoint.set(cx, cy);
         // 可移动区域的半径
         mAreaRadius = (measuredWidth <= measuredHeight) ? (int) (cx / (mRockerScale + 1)) : (int) (cy / (mRockerScale + 1));
+        //mAreaRadius = mAreaRadius/2;
         mRockerRadius = (int) (mAreaRadius * mRockerScale);
+        //mRockerRadius = mRockerRadius/2;
         // 摇杆位置
         if (0 == mRockerPosition.x || 0 == mRockerPosition.y) {
             mRockerPosition.set(mCenterPoint.x, mCenterPoint.y);
