@@ -138,7 +138,7 @@ public class MyRockerView extends View {
 
         // 可移动区域背景
         //Drawable areaBackground = typedArray.getDrawable(R.styleable.RockerView_areaBackground);
-        Drawable areaBackground = getResources().getDrawable(R.drawable.eight_control_back);
+        Drawable areaBackground = getResources().getDrawable(R.drawable.eight_control_center);
         if (null != areaBackground) {
             // 设置了背景
             if (areaBackground instanceof BitmapDrawable) {
@@ -163,7 +163,7 @@ public class MyRockerView extends View {
         }
         // 摇杆背景
         //Drawable rockerBackground = typedArray.getDrawable(R.styleable.RockerView_rockerBackground);
-        Drawable rockerBackground = getResources().getDrawable(R.drawable.eight_control_center);
+        Drawable rockerBackground = getResources().getDrawable(R.drawable.eight_control_back);
         if (null != rockerBackground) {
             // 设置了摇杆背景
             if (rockerBackground instanceof BitmapDrawable) {
