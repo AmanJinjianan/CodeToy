@@ -330,6 +330,10 @@ public class DrawView extends View {
                 case 112:
                     keyUpEvent();
                     Toast.makeText(theContext,"完了",Toast.LENGTH_SHORT).show();
+
+                    commandTwoBytes[0] = (byte)0x00;commandTwoBytes[1] = (byte)0x00;
+                    intent.putExtra("data",commandTwoBytes);
+                    theContext.sendBroadcast(intent);
                     nothing();
                     break;
             }

@@ -403,7 +403,7 @@ public class BleDataActivity extends Activity implements View.OnClickListener,Vi
         mSendBle = new SendBle(this);
 
         /*thetr = (TextView) findViewById(R.id.thrtittle);
-        myAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation1);
+        myAnimation = AnimationUtils.loadAnimation(this, R.anim_ble_con.rotation1);
         findViewById(R.id.imageView111).startAnimation(myAnimation);
 
        ;*/

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.qixiang.codetoy.ControllerActivity;
+import com.qixiang.codetoy.ControllerProActivity;
 import com.qixiang.codetoy.DrawActivity;
 import com.qixiang.codetoy.PKActivity;
 import com.qixiang.codetoy.R;
@@ -25,19 +26,24 @@ public class Item_Controlset extends RelativeLayout{
         theContext = context;
         View view = LayoutInflater.from(context).inflate(R.layout.item_controlset, this);
 
-        ImageButton ib = (ImageButton)findViewById(R.id.ib_control_center);
+        RelativeLayout ib = (RelativeLayout)findViewById(R.id.ib_control_center);
         ImageView iv = (ImageView)findViewById(R.id.iv_control_center);
-        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) ib.getLayoutParams(); //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
 
+        LinearLayout.LayoutParams linearParams =(LinearLayout.LayoutParams) ib.getLayoutParams(); //取控件textView当前的布局参数 linearParams.height = 20;// 控件的高强制设成20
         linearParams.width = width-40;
         linearParams.height = (int)(linearParams.width*1.04);
         ib.setLayoutParams(linearParams);
+
+        RelativeLayout.LayoutParams rl = (RelativeLayout.LayoutParams)iv.getLayoutParams();
+        rl.width = (int)(linearParams.width*0.6);
+        rl.height = (int)(rl.width * 0.3);
+        iv.setLayoutParams(rl);
         switch (s){
             case 0: ib.setBackgroundResource(R.drawable.btn_control1);
                     ib.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(theContext, ControllerActivity.class);
+                            Intent intent = new Intent(theContext, ControllerProActivity.class);
                             theContext.startActivity(intent);
                         }
                     });

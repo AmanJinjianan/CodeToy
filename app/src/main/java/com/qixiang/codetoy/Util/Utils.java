@@ -3,6 +3,7 @@ package com.qixiang.codetoy.Util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Menu;
 
 import com.qixiang.codetoy.MainActivity;
 import com.qixiang.codetoy.Model.StuInfo;
@@ -27,8 +28,16 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Utils {
 
+    public enum ConnectState {
+        //初始状态
+        DEFAULT,
+        CONNECTTING,
+        PRECONNECT,
+        CONNECTED
+    }
 
-
+    //连接状态
+    public static ConnectState myConnectState = ConnectState.DEFAULT;
     public static boolean WXFlag=false;
 
     public static String openID="";

@@ -7,17 +7,30 @@
     android:padding="10dp"
     android:orientation="vertical">
 
-    <ImageButton
+    <RelativeLayout
+        android:id="@+id/rl_play_center"
         android:layout_weight="5"
-        android:id="@+id/iv_center_play"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/pic_item2"
-        />
+        >
+
+        <ImageButton
+            android:id="@+id/iv_center_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_con_ble2"
+            android:visibility="invisible"
+            android:text="Button" />
+    </RelativeLayout>
 
     <TextView
         android:layout_weight="1"
-        android:id="@+id/textView3"
+        android:id="@+id/tv_item_name"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"

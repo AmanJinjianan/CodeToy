@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.qixiang.codetoy.ControlMainAct;
 import com.qixiang.codetoy.MyView.Item_Playset;
 import com.qixiang.codetoy.R;
+import com.qixiang.codetoy.Util.DpUtils;
 
 import java.util.ArrayList;
 
@@ -33,7 +35,7 @@ public class PlaysetFragment extends Fragment {
     public Handler theHandler;
 
     public void setTheHandler(Handler handler){
-        theHandler =handler;
+        theHandler = handler;
     }
     @Nullable
     @Override
@@ -68,13 +70,17 @@ public class PlaysetFragment extends Fragment {
         horizontalScrollView = (HorizontalScrollView) context1.findViewById(R.id.horizontalScrollView);
         container = (LinearLayout) context1.findViewById(R.id.horiziner334);
 
+        //避免重复添加item
         if(container.getChildCount() == 0){
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((ControlMainAct.width-240)/3,ViewGroup.LayoutParams.WRAP_CONTENT);
+            int height = ControlMainAct.height - DpUtils.dp2px(getContext(),65);
+            int width = (int)(height/1.5);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width,height);
             layoutParams.gravity = Gravity.CENTER;
             layoutParams.setMargins(40, 10, 40, 10);
 
             for (int i = 0; i < 4; i++) {
-                Item_Playset ip = new Item_Playset(context1,i,(ControlMainAct.width-240)/3,theHandler);
+                Item_Playset ip = new Item_Playset(context1,i,theHandler);
                 ip.setLayoutParams(layoutParams);
                 container.addView(ip);
                 container.invalidate();
@@ -82,6 +88,21 @@ public class PlaysetFragment extends Fragment {
         }
 
         super.onResume();
+    }
+
+    public void addItem(byte[] id){
+//        Item_Playset ip = new Item_Playset(context1,7,theHandler);
+//        ip.setLayoutParams(layoutParams);
+//        if(container != null){
+//            container.addView(ip);
+//        }
+    }
+
+    public Item_Playset getItemByIndex(int index){
+        if(container.getChildCount()>0)
+            return  (Item_Playset)(container.getChildAt(index));
+        else
+            return null;
     }
 }
 

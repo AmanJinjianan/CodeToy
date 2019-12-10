@@ -283,6 +283,7 @@ public class MyRockerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.e("filter1","event.getX():"+event.getX());
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:// 按下
                 // 回调 开始
@@ -409,7 +410,7 @@ public class MyRockerView extends View {
      * @param angle 摇动角度
      */
     private void callBack(double angle, float distance) {
-        Log.e("distance",distance+"");
+        Log.e("filter1",distance+"    ");
         if (Math.abs(distance - lastDistance) >= (baseDistance / mDistanceLevel)) {
             lastDistance = distance;
             if (null != mOnDistanceLevelListener) {

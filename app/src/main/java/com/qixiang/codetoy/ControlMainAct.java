@@ -47,6 +47,7 @@ import com.qixiang.codetoy.Fragment.ControlsetFragment;
 import com.qixiang.codetoy.Fragment.PlaysetFragment;
 import com.qixiang.codetoy.Fragment.StudysetFragment;
 import com.qixiang.codetoy.Impl.BleDataImpl;
+import com.qixiang.codetoy.MyView.Item_Playset;
 import com.qixiang.codetoy.Util.Utils;
 import com.qixiang.codetoy.ViewAdapter.ViewPagerFragmentAdapter;
 
@@ -69,9 +70,7 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     private SendBle mSendBle;
     private final static int REQUEST_ENABLE_BT=2001;
 
-    public LinearLayout container;
     GradientDrawable firstLinearLayoutGD,secondLinearlayoutGD,threeLinearLayoutGD,fourLinearLayoutGD,fiveLinearLayoutGD;
-
     List<Fragment> mFragmentList = new ArrayList<Fragment>();
     FragmentManager mFragmentManager;
     public LinearLayout firstLinearLayout,secondLinearlayout,threeLinearLayout,fourLinearLayout,fiveLinearLayout;
@@ -82,10 +81,11 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     TextView titleTextView;
     //保存下位机设备ID
     public byte theOneByte=0;
+    public String carId = "";
 
     private ToggleButton tgButton_hide;
     //代表在第几个“发收周期”，初始为"1"（一发一收代表一个周期）
-    int recycleCount=1;
+    int recycleCount = 1;
     String theReamainDataString = "";
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -94,7 +94,6 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
             if(!reveiveFlag)
                 return;
-
             if(identifySysID(scanRecord)){
                 String ddString = Utils.toHexString(scanRecord);
                 if (remainString.equals(ddString)){
@@ -111,6 +110,7 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                     myHandler.sendEmptyMessage(131415);
                     if(recycleCount ==1){//在第一个“发收周期”
                         theOneByte =scanRecord[13];
+                        carId = Utils.toHexString(new byte[]{scanRecord[12],scanRecord[13]});
                         theReceiveData = bytesToHexFun3(scanRecord);
                         myHandler.sendEmptyMessage(13141);
                     }
@@ -161,8 +161,10 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                     if(recycleCount >= 2){
                         //scrollToBottom("连接完成！" + recycleCount+" "+Utils.toHexString(new byte[]{theOneByte}));
                         reveiveFlag = false;
-                        Toast.makeText(ControlMainAct.this, "连上了..."+Utils.toHexString(new byte[]{theOneByte}), Toast.LENGTH_LONG).show();
-                        maxSendData("0000000000000000",(byte)0x01);
+                        Utils.myConnectState = Utils.ConnectState.PRECONNECT;
+                        Toast.makeText(ControlMainAct.this, "扫到了..."+Utils.toHexString(new byte[]{theOneByte}), Toast.LENGTH_LONG).show();
+                        //maxSendData("0000000000000000",(byte)0x01);
+                        stopBleAnim();
                         myHandler.sendEmptyMessage(122);
                     }else {
                         //scrollToBottom("第"+recycleCount+"个周期");
@@ -248,6 +250,8 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                     //maxSendData("0000"+Utils.toHexString(dataTwoByte)+"00000000",(byte)0x04);
                     break;
                 case 4601:
+                    recycleCount = 1;
+                    Utils.myConnectState = Utils.ConnectState.CONNECTTING;
                     Toast.makeText(ControlMainAct.this, "Linking...", Toast.LENGTH_LONG).show();
                     reveiveFlag = true;
                     maxSendData("0000810000000000",(byte)0xFF);
@@ -255,13 +259,42 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                 case 4602:
                     maxSendData("0000"+Utils.toHexString(dataTwoByte)+"00000000",(byte)0x04);
                     break;
+                case 4603:
+                    maxSendData("0000000000000000",(byte)0x04);
+                    break;
+                case 46033://断开
+                    maxSendData("0000F00000000000",(byte)0x04);
+                    break;
                 default:
                     break;
             }
         };
     };
 
-    public BleDataImpl hanImpl;
+    //停止ble动画，并且给对应设备添加名字
+    private void stopBleAnim() {
+        if(!carId.equals("")){
+            Item_Playset ip;
+            if(null != (ip = pf.getItemByIndex(1))){
+                pf.getItemByIndex(0).animationDrawable.stop();
+                ip.setItemName(carId);
+            }
+        }
+    }
+    private void startBleAnim() {
+        //pf.getItemByIndex(0).animationDrawable.start();
+        if(!carId.equals("")){
+            Item_Playset ip;
+            if(null != (ip = pf.getItemByIndex(1))){
+                pf.getItemByIndex(0).animationDrawable.stop();
+                ip.setItemName(carId);
+            }
+        }
+    }
+    public PlaysetFragment pf;
+    public Fragment cf;
+    public Fragment sf;
+    public Fragment csf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -280,11 +313,11 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
 
         mFragmentManager = getSupportFragmentManager();
 
-        PlaysetFragment pf = new PlaysetFragment();
+        pf = new PlaysetFragment();
         pf.setTheHandler(myHandler);
-        Fragment cf = new ControlsetFragment();
-        Fragment sf = new StudysetFragment();
-        Fragment csf = new CodesetFragment();
+        cf = new ControlsetFragment();
+        sf = new StudysetFragment();
+        csf = new CodesetFragment();
 
         mFragmentList.add(pf);
         mFragmentList.add(cf);
@@ -310,10 +343,9 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     private BroadcastReceiver brv = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //Toast.makeText(ControlMainAct.this, "777777777777777777777.", Toast.LENGTH_LONG).show();
             byte[] controlData = intent.getByteArrayExtra("data");
             dataTwoByte = controlData;
-            Utils.LogE("controlData:::::::::::::::::::::::"+controlData.length);
+            Utils.LogE("controlData:::::::::::::::::::::::" + Utils.toHexString(controlData));
             myHandler.sendEmptyMessage(4602);
         }
     };

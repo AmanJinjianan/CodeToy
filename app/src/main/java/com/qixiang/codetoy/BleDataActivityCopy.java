@@ -345,7 +345,7 @@ public class BleDataActivityCopy extends Activity implements View.OnClickListene
 
 
         /*thetr = (TextView) findViewById(R.id.thrtittle);
-        myAnimation = AnimationUtils.loadAnimation(this, R.anim.rotation1);
+        myAnimation = AnimationUtils.loadAnimation(this, R.anim_ble_con.rotation1);
         findViewById(R.id.imageView111).startAnimation(myAnimation);
 
        ;*/

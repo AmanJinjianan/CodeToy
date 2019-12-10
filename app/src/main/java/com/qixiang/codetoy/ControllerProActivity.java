@@ -58,13 +58,15 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
     void initView(){
         findViewById(R.id.ib_control_pro_back).setOnClickListener(this);
 
-        findViewById(R.id.btn_left_down).setOnClickListener(this);
-        findViewById(R.id.btn_left_up).setOnClickListener(this);
-        findViewById(R.id.btn_right_down).setOnClickListener(this);
-        findViewById(R.id.btn_right_up).setOnClickListener(this);
+        findViewById(R.id.btn_left_down).setOnTouchListener(MyTai);
+        findViewById(R.id.btn_left_up).setOnTouchListener(MyTai);
+        findViewById(R.id.btn_right_down).setOnTouchListener(MyTai);
+        findViewById(R.id.btn_right_up).setOnTouchListener(MyTai);
 
-        findViewById(R.id.btn_left_pro).setOnClickListener(this);
-        findViewById(R.id.btn_right_pro).setOnClickListener(this);
+        findViewById(R.id.btn_control_start).setOnClickListener(this);
+
+        findViewById(R.id.btn_left_pro).setOnTouchListener(MyTai);
+        findViewById(R.id.btn_right_pro).setOnTouchListener(MyTai);
 
         myRockerView = (MyRockerView) findViewById(R.id.act_myrockview);
         myRockerView.setOnShakeListener(MyRockerView.DirectionMode.DIRECTION_8,this);
@@ -95,29 +97,11 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
         if(v.getId() == R.id.ib_control_pro_back){
             this.finish();
             return;
+        }else if(v.getId() == R.id.btn_control_start){
+            commandTwoBytes[0] = (byte)0x71;commandTwoBytes[1] = (byte)0x00;
+            intent.putExtra("data",commandTwoBytes);
+            sendBroadcast(intent);
         }
-        switch (v.getId()){
-            case R.id.btn_left_pro:
-                commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB6;
-                break;
-            case R.id.btn_right_pro:
-                commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB9;
-                break;
-            case R.id.btn_left_up:
-                commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB0;
-                break;
-            case R.id.btn_right_up:
-                commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB0;
-                break;
-            case R.id.btn_left_down:
-                commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB9;
-                break;
-            case R.id.btn_right_down:
-                commandTwoBytes[0] = (byte)0xA0;commandTwoBytes[1] = (byte)0xB6;
-                break;
-        }
-        intent.putExtra("data",commandTwoBytes);
-        sendBroadcast(intent);
     }
 
     @Override
@@ -129,28 +113,33 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
     public void direction(MyRockerView.Direction direction,float distance) {
         switch (direction){
             case DIRECTION_LEFT://左 A6B9
-                commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB9;
+                commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB9; touchModel = 1;
                 break;
             case DIRECTION_RIGHT://右 A9B6
-                commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB6;
+                commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB6; touchModel = 1;
                 break;
             case DIRECTION_UP://上 AABA
-                commandTwoBytes[0] = (byte)0xAA;commandTwoBytes[1] = (byte)0xBA;
+                commandTwoBytes[0] = (byte)0xAA;commandTwoBytes[1] = (byte)0xBA; touchModel = 1;
                 break;
             case DIRECTION_DOWN://下 A5B5
-                commandTwoBytes[0] = (byte)0xA5;commandTwoBytes[1] = (byte)0xB5;
+                commandTwoBytes[0] = (byte)0xA5;commandTwoBytes[1] = (byte)0xB5; touchModel = 1;
                 break;
             case DIRECTION_UP_LEFT://左上 A2B8
-                commandTwoBytes[0] = (byte)0xA2;commandTwoBytes[1] = (byte)0xB8;
+                commandTwoBytes[0] = (byte)0xA2;commandTwoBytes[1] = (byte)0xB8; touchModel = 1;
                 break;
             case DIRECTION_UP_RIGHT://右上 A8B2
-                commandTwoBytes[0] = (byte)0xA8;commandTwoBytes[1] = (byte)0xB2;
+                commandTwoBytes[0] = (byte)0xA8;commandTwoBytes[1] = (byte)0xB2; touchModel = 1;
                 break;
             case DIRECTION_DOWN_LEFT://左下 A4B1
-                commandTwoBytes[0] = (byte)0xA4;commandTwoBytes[1] = (byte)0xB1;
+                commandTwoBytes[0] = (byte)0xA4;commandTwoBytes[1] = (byte)0xB1; touchModel = 1;
                 break;
             case DIRECTION_DOWN_RIGHT://右下 A1B4
-                commandTwoBytes[0] = (byte)0xA1;commandTwoBytes[1] = (byte)0xB4;
+                commandTwoBytes[0] = (byte)0xA1;commandTwoBytes[1] = (byte)0xB4; touchModel = 1;
+                break;
+            case DIRECTION_CENTER://右下 A1B4
+                if(touchModel == 1){
+                    commandTwoBytes[0] = (byte)0x00;commandTwoBytes[1] = (byte)0x00;
+                }
                 break;
         }
         intent.putExtra("data",commandTwoBytes);
@@ -161,6 +150,7 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
     @Override
     public void onFinish() {}
 
+
     class MyTimerTask extends TimerTask {
         @Override
         public void run() {
@@ -168,36 +158,44 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
             sendBroadcast(intent);
         }
     }
-
+    // 0: 非八项控制摇杆指令    1：八项控制摇杆指令
+    int touchModel = -1;
     private View.OnTouchListener MyTai = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction()==MotionEvent.ACTION_CANCEL || event.getAction()==MotionEvent.ACTION_UP){
                 Toast.makeText(ControllerProActivity.this, "UP", Toast.LENGTH_SHORT).show();
-                if(v.getId() == R.id.btn_left_pro|| v.getId() == R.id.btn_right_pro){
-                    commandTwoBytes[1] = 0;
-                    if(timer34 != null){
-                        timer34.cancel();
-                        //stopSendData();
-                        mSendBle.stopSend();
-                    }
+                if(touchModel == 0){
+                    commandTwoBytes[0] = (byte)0x00;commandTwoBytes[1] = (byte)0x00;
+                    intent.putExtra("data",commandTwoBytes);
+                    sendBroadcast(intent);
                 }
             } else  if(event.getAction()==MotionEvent.ACTION_DOWN){
                 Toast.makeText(ControllerProActivity.this, "ACTION_DOWN", Toast.LENGTH_SHORT).show();
+                touchModel = 0;
                 switch (v.getId()){
                     case R.id.btn_left_pro:
-                        commandTwoBytes[1] = 0x3C;
-                        timer34=new Timer();
-                        mt34 = new MyTimerTask();
-                        timer34.schedule(mt34,0,200);
+                        commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB6;
                         break;
                     case R.id.btn_right_pro:
-                        commandTwoBytes[1] = 0x4C;
-                        timer34=new Timer();
-                        mt34 = new MyTimerTask();
-                        timer34.schedule(mt34,0,200);
+                        commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB9;
+                        break;
+
+                    case R.id.btn_left_up:
+                        commandTwoBytes[0] = (byte)0xA6;commandTwoBytes[1] = (byte)0xB0;
+                        break;
+                    case R.id.btn_right_up:
+                        commandTwoBytes[0] = (byte)0xA9;commandTwoBytes[1] = (byte)0xB0;
+                        break;
+                    case R.id.btn_left_down:
+                        commandTwoBytes[0] = (byte)0xA0;commandTwoBytes[1] = (byte)0xB9;
+                        break;
+                    case R.id.btn_right_down:
+                        commandTwoBytes[0] = (byte)0xA0;commandTwoBytes[1] = (byte)0xB6;
                         break;
                 }
+                intent.putExtra("data",commandTwoBytes);
+                sendBroadcast(intent);
             }
             return false;
         }

@@ -36,8 +36,8 @@
 
                 <com.qixiang.codetoy.MyView.MyRockerView
                     android:id="@+id/act_myrockview"
-                    android:layout_width="800px"
-                    android:layout_height="800px"
+                    android:layout_width="1800px"
+                    android:layout_height="1800px"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="-42dp"
@@ -76,6 +76,16 @@
                 android:rotation="45" />
 
             <Button
+                android:id="@+id/btn_control_start"
+                android:layout_width="150px"
+                android:layout_height="80px"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="-14dp"
+                android:layout_marginBottom="155dp"
+                android:layout_toEndOf="@+id/btn_left_up"
+                android:background="@drawable/btn_control_start" />
+
+            <Button
                 android:id="@+id/btn_left_down"
                 android:layout_width="193px"
                 android:layout_height="247px"
@@ -107,6 +117,7 @@
                 android:layout_toEndOf="@+id/btn_left_up"
                 android:background="@drawable/btn_right"
                 android:rotation="-45" />
+
         </RelativeLayout>
 
         <RelativeLayout
