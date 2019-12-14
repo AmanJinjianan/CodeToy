@@ -40,8 +40,8 @@
                     android:layout_height="1800px"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginStart="-42dp"
-                    android:layout_marginTop="-44dp" />
+                    android:layout_marginStart="-111px"
+                    android:layout_marginTop="-122px" />
                 <!--<ImageButton-->
                     <!--android:layout_width="wrap_content"-->
                     <!--android:layout_height="wrap_content"-->
@@ -69,8 +69,8 @@
                 android:layout_width="193px"
                 android:layout_height="247px"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="37dp"
-                android:layout_marginBottom="68dp"
+                android:layout_marginStart="111px"
+                android:layout_marginBottom="204px"
                 android:layout_toEndOf="@+id/btn_left_up"
                 android:background="@drawable/btn_right"
                 android:rotation="45" />
@@ -80,8 +80,8 @@
                 android:layout_width="150px"
                 android:layout_height="80px"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="-14dp"
-                android:layout_marginBottom="155dp"
+                android:layout_marginStart="-36px"
+                android:layout_marginBottom="425px"
                 android:layout_toEndOf="@+id/btn_left_up"
                 android:background="@drawable/btn_control_start" />
 
@@ -91,8 +91,8 @@
                 android:layout_height="247px"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginBottom="68dp"
+                android:layout_marginStart="75px"
+                android:layout_marginBottom="204px"
                 android:background="@drawable/btn_left"
                 android:rotation="-45" />
 
@@ -102,8 +102,8 @@
                 android:layout_height="247px"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="26dp"
-                android:layout_marginBottom="178dp"
+                android:layout_marginStart="78px"
+                android:layout_marginBottom="474px"
                 android:background="@drawable/btn_left"
                 android:rotation="45" />
 
@@ -112,8 +112,8 @@
                 android:layout_width="193px"
                 android:layout_height="247px"
                 android:layout_alignBottom="@+id/btn_left_up"
-                android:layout_marginStart="37dp"
-                android:layout_marginBottom="-3dp"
+                android:layout_marginStart="111px"
+                android:layout_marginBottom="-9px"
                 android:layout_toEndOf="@+id/btn_left_up"
                 android:background="@drawable/btn_right"
                 android:rotation="-45" />
@@ -132,8 +132,8 @@
                 android:layout_height="247px"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="11dp"
-                android:layout_marginBottom="114dp"
+                android:layout_marginStart="33px"
+                android:layout_marginBottom="322px"
                 android:background="@drawable/btn_left" />
 
             <Button

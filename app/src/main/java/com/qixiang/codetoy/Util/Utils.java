@@ -2,6 +2,7 @@ package com.qixiang.codetoy.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 
@@ -91,6 +92,13 @@ public class Utils {
         return taskNum;
     }
 
+    /**
+     * 判断是否在当前主线程
+     * @return
+     */
+    public static boolean isOnMainThread(){
+        return true;
+    }
     /**
      * 设置用户任务号
      */

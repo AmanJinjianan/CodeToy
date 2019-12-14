@@ -31,7 +31,7 @@ import com.qixiang.codetoy.Util.Utils;
 import com.qixiang.codetoy.Model.ClassInfo;
 import com.qixiang.codetoy.MyView.CreateClassDialog;
 import com.qixiang.codetoy.Fragment.ClassFragment;
-import com.qixiang.codetoy.Fragment.MyFragment;
+import com.qixiang.codetoy.Fragment.MyAssetsFragment;
 import com.qixiang.codetoy.Fragment.TeachFragment;
 import com.qixiang.codetoy.ViewAdapter.MyAdapter;
 import com.qixiang.codetoy.ViewAdapter.MyAdapterMission;
@@ -461,7 +461,7 @@ private void RequestClassInfo(){
     private void initFragmentList() {
         Fragment classF = new ClassFragment();
         Fragment teachF = new TeachFragment();
-        Fragment myF = new MyFragment();
+        Fragment myF = new MyAssetsFragment();
 
         mFragmentList.add(classF);
         mFragmentList.add(teachF);

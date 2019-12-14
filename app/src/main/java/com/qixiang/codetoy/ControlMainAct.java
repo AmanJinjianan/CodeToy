@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -101,13 +102,8 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                 }
                 remainString  = ddString;
                 Tools.setLog("log1", "系统值匹配成功..........LLL:"+recycleCount+"\n       ddString:"+ddString+"   remainString:"+remainString);
-                theReamainDataString = "系统值匹配成功..........LLL:"+recycleCount;
-                myHandler.sendEmptyMessage(131415);
-
                 if(identifyRanData(scanRecord)){//匹配校验发送的随机数
                     Tools.setLog("log1", "随机数匹配成功..........:"+recycleCount);
-                    theReamainDataString = "随机数匹配成功..........:"+recycleCount;
-                    myHandler.sendEmptyMessage(131415);
                     if(recycleCount ==1){//在第一个“发收周期”
                         theOneByte =scanRecord[13];
                         carId = Utils.toHexString(new byte[]{scanRecord[12],scanRecord[13]});
@@ -155,7 +151,6 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case 13141:
-                    Tools.setLog("log1", "..........................................................................13141");
                     //进行周期递增
                     recycleCount++;
                     if(recycleCount >= 2){
@@ -163,16 +158,12 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                         reveiveFlag = false;
                         Utils.myConnectState = Utils.ConnectState.PRECONNECT;
                         Toast.makeText(ControlMainAct.this, "扫到了..."+Utils.toHexString(new byte[]{theOneByte}), Toast.LENGTH_LONG).show();
-                        //maxSendData("0000000000000000",(byte)0x01);
                         stopBleAnim();
                         myHandler.sendEmptyMessage(122);
                     }else {
                         //scrollToBottom("第"+recycleCount+"个周期");
                         maxSendData("0000000000000000",(byte)0xFF);
                     }
-                    break;
-                case 131415:
-                    //scrollToBottom(theReamainDataString);
                     break;
                 case 1234321:
                     Bundle d =msg.getData();
@@ -259,6 +250,9 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
                 case 4602:
                     maxSendData("0000"+Utils.toHexString(dataTwoByte)+"00000000",(byte)0x04);
                     break;
+                case 46022:
+                    stopSendData();
+                    break;
                 case 4603:
                     maxSendData("0000000000000000",(byte)0x04);
                     break;
@@ -300,6 +294,7 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         super.onCreate(savedInstanceState);
 
         checkBluetoothPermission();
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//当前activity强制设置为横屏
         reveiveFlag = false;
         setContentView(R.layout.activity_control_main);
 
@@ -325,28 +320,39 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
         mFragmentList.add(csf);
 
         mViewPagerFragmentAdapter =   new ViewPagerFragmentAdapter(mFragmentManager,mFragmentList);
+
         initView();
+
+        boolean ss = Utils.isOnMainThread();
 
         reveiveFlag = false;
         mSendBle = new SendBle(this);
         //firstLinearLayout.setSelected(true);
-
         registerBro();
     }
 
     public static final String  Action_control_data = "CONTROLLERDATA";
+    public static final String  Action_stop_data = "STOPCOMMAND";
     private void registerBro(){
         IntentFilter itf = new IntentFilter();
         itf.addAction(Action_control_data);
+        itf.addAction(Action_stop_data);
         registerReceiver(brv,itf);
     }
+    byte[] controlData;
     private BroadcastReceiver brv = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            byte[] controlData = intent.getByteArrayExtra("data");
-            dataTwoByte = controlData;
-            Utils.LogE("controlData:::::::::::::::::::::::" + Utils.toHexString(controlData));
-            myHandler.sendEmptyMessage(4602);
+           if(Action_control_data.equals(intent.getAction())){
+                controlData = intent.getByteArrayExtra("data");
+                dataTwoByte = controlData;
+                Utils.LogE("controlData:::::::::::::::::::::::" + Utils.toHexString(controlData));
+               maxSendData("0000"+Utils.toHexString(dataTwoByte)+"00000000",(byte)0x04);
+                //myHandler.sendEmptyMessage(4602);
+            }else if(Action_stop_data.equals(intent.getAction())){
+               boolean ss = Utils.isOnMainThread();
+               myHandler.sendEmptyMessage(46022);
+           }
         }
     };
     ArrayList<String> unPermissionList;
@@ -785,13 +791,10 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     class ViewPagerOnPagerChangedLisenter implements ViewPager.OnPageChangeListener{
 
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
         @Override
         public void onPageSelected(int position) {
-
             boolean[] state = new boolean[4];
             state[position] = true;
             //titleTextView.setText(titleName[position]);
@@ -817,14 +820,14 @@ public class ControlMainAct extends AppCompatActivity implements  View.OnClickLi
     }
 
     private void stopSendData() {
-        //Toast.makeText(ControlMainAct.this, "停22", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ControlMainAct.this, "停22", Toast.LENGTH_SHORT).show();
 //        findViewById(R.id.btn_stop).setEnabled(false);
 //        findViewById(R.id.btn_more).setEnabled(true);
-//        mSendBle.stopSend();
+        mSendBle.stopSend();
     }
     public void maxSendData(String realData,byte theDirection){
-        if(recycleCount != 1)
-            stopSendData();
+//        if(recycleCount != 1)
+//            stopSendData();
         String sendData = getIDValue(realData,theDirection);
         if("".equals(sendData)){
             Toast.makeText(ControlMainAct.this, "发送数据异常", Toast.LENGTH_SHORT).show();

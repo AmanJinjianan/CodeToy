@@ -21,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.qixiang.codetoy.ControlMainAct.Action_control_data;
+import static com.qixiang.codetoy.ControlMainAct.Action_stop_data;
 
 public class ControllerProActivity extends Activity implements View.OnClickListener, MyRockerView.OnShakeListener {
 
@@ -95,6 +96,8 @@ public class ControllerProActivity extends Activity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.ib_control_pro_back){
+            Intent intent = new Intent(Action_stop_data);
+            sendBroadcast(intent);
             this.finish();
             return;
         }else if(v.getId() == R.id.btn_control_start){
